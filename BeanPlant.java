@@ -1,9 +1,9 @@
-public class BeanPlant extends Actor
-{
-  private Actor actor;
-  
-  public BeanPlant()
-  {
-    actor.actorType = ActorType.BeanPlant.toString();
-  }
+
+public class BeanPlant extends Plant {
+
+	public BeanPlant()
+	{
+		float creationProbability = 0.1F;
+		
+	}
 }
