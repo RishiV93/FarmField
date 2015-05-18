@@ -59,7 +59,8 @@ public class Simulator {
 			actor.act(field);
 			
 			System.out.println(actor.actorType);
-
+			System.out.println(actor.getLocation());
+			
 			this.step++;
 		}
 	}
@@ -96,9 +97,7 @@ public class Simulator {
 					farmer.actorType = "Farmer";
 					Location location = new Location(x,y);
 					farmer.setLocation(location);
-					System.out.println(farmer.getLocation());
 					actorList.add(farmer);
-
 				}
 				
 				random = rand.nextDouble();
@@ -108,6 +107,8 @@ public class Simulator {
 					BeanPlant beanPlant = new BeanPlant();
 					field.place(beanPlant, x, y);
 					beanPlant.actorType = "Bean Plant";
+					Location location = new Location(x,y);
+					beanPlant.setLocation(location);
 					actorList.add(beanPlant);
 				}
 				
@@ -118,6 +119,8 @@ public class Simulator {
 					Weed weed = new Weed();
 					field.place(weed, x, y);
 					weed.actorType = "Weed";
+					Location location = new Location(x,y);
+					weed.setLocation(location);
 					actorList.add(weed);
 				}
 			}
