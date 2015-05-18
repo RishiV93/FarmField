@@ -18,6 +18,12 @@ public abstract class Actor extends ModelConstants
   
   public abstract void act(Field theField);
 
+  public abstract void setLocation(Location location);
+  
+  public abstract Location getLocation();
+  
+  
+
   // updates the alive indicator for weeds and beanplant
   public void UpdateActorAliveStatus(boolean newStatus)
   {
