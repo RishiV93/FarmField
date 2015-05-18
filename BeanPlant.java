@@ -1,9 +1,14 @@
+public class BeanPlant extends Actor {
 
-public class BeanPlant extends Plant {
-
+	@Override
+	public void act(Field theField) {
+		// TODO Auto-generated method stub
+		System.out.println("BEAN PLANT ACT");
+		
+	}
+	
 	public BeanPlant()
 	{
-		float creationProbability = 0.1F;
-		
+		actorType = "BeanPlant";
 	}
 }
