@@ -211,6 +211,16 @@ public class Field
 		return locations.iterator();
 	}
 	
+	public void setDepth(int d)
+	{
+		depth = d;
+	}
+	
+	public void setWidth(int w)
+	{
+		width = w;
+	}
+	
 	/**
 	 * @return The depth of the field.
 	 */
