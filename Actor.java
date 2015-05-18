@@ -1,4 +1,4 @@
-public class Actor
+public abstract class Actor extends ModelConstants
 {
   private int age;
   private boolean alive = true;
@@ -7,19 +7,17 @@ public class Actor
   
   // (row, column)
   private Location location;
-  
-  // must be < 1
-  // the range is a decimal from 0 to 1 in 0.1 increments
-  private int creationProbability;
 
   // the various types of actors within the system.
-  public enum ActorType
+  public  enum  ActorType
   {
     BeanPlant,
     Weed,
     Farmer
   }
   
+  public abstract void act(Field theField);
+
   // updates the alive indicator for weeds and beanplant
   public void UpdateActorAliveStatus(boolean newStatus)
   {
