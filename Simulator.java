@@ -5,11 +5,14 @@ import java.util.Random;
 
 public class Simulator {
 	
+	private int steps = 500;
 	private int step = 1;
+	private List<Actor> actorList = new ArrayList<Actor>();
+	private Field field;
 	
-	public Simulator(int depth, int width)
+	public Simulator(int depth, int width, int noOfSteps)
 	{
-		Field field = new Field(depth,width);	// creates a field with the provided depth and width e.g. 50*50
+		field = new Field(depth,width);							// creates a field with the provided depth and width e.g. 50*50
 		
 		if (depth < 0 || depth > ModelConstants.MAX_WIDTH_DEPTH)
 		{
@@ -23,41 +26,52 @@ public class Simulator {
 			field.setWidth(width);
 		}
 		
+		if (noOfSteps < 0 || noOfSteps > ModelConstants.MAX_NO_STEPS)
+		{
+			steps = ModelConstants.DEFAULT_NO_STEPS;
+		}
+		
 		SimulatorView view = new SimulatorView(depth,width);	// outputs a graphical view of the field
 		
 		view.setColor(Farmer.class, Color.black);				// sets the colour to be used by each farmer instance
 		view.setColor(Weed.class, Color.blue);					// sets the colour to be used by each weed instance
 		view.setColor(BeanPlant.class, Color.green);			// sets the colour to be used by each bean plant instance
-
-		List<Actor> actorList = new ArrayList<Actor>();
-		List<Farmer> farmerList = new ArrayList<Farmer>();
-		List<BeanPlant> beanPlantList = new ArrayList<BeanPlant>();
 		
-		populate(field, new Random().nextInt());		// calls 'populate', providing the field and a random integer as a seed
+		populate(field, new Random().nextInt());				// calls 'populate', providing the field and a random integer as a seed
 		
-		view.showStatus(step, field);					// shows an "updated version" of the field, having now been populated
+		simulate(this.step);
 		
+		view.showStatus(step, field);							// shows an "updated version" of the field, having now been populated
 	}
 	
 	public void simulate(int noOfSteps)
 	{
-		
+			simulateOneStep(this.step);
+			this.step++;
 	}
 	
 	public void simulateOneStep(int step)
-	{
-		
+	{	
+		for (int x = 1 ; x < actorList.size() ; x++ )
+		{
+			Actor actor = actorList.get(this.step);
+			
+			actor.act(field);
+			
+			System.out.println(actor.actorType);
+
+			this.step++;
+		}
 	}
 	
-	public void populate(Field field, int seed)
+	public void populate(Field field, int seed)			// populates the field with initial actors
 	{
 		field.clear();									// empties all field cells
 		
 		int depth = field.getDepth();
 		int width = field.getWidth();
-		
 
-		final int SIZE = 20;
+		final int SIZE = 50;
 
 		RandomGenerator.initialiseWithSeed(seed);
 		Random rand = RandomGenerator.getRandom();
@@ -79,30 +93,39 @@ public class Simulator {
 				{
 					Farmer farmer = new Farmer();
 					field.place(farmer, x, y);
-					farmerList.add(farmer);
+					farmer.actorType = "Farmer";
+					Location location = new Location(x,y);
+					farmer.setLocation(location);
+					System.out.println(farmer.getLocation());
+					actorList.add(farmer);
+
 				}
 				
 				random = rand.nextDouble();
 				
 				if(random < BeanPlant.BEANPLANT_CP)
 				{
-					field.place(new BeanPlant(), x,y);
+					BeanPlant beanPlant = new BeanPlant();
+					field.place(beanPlant, x, y);
+					beanPlant.actorType = "Bean Plant";
+					actorList.add(beanPlant);
 				}
 				
 				random = rand.nextDouble();
-			
 				
 				if(random < Weed.WEED_CP)
 				{
-					field.place(new Weed(), x, y);
+					Weed weed = new Weed();
+					field.place(weed, x, y);
+					weed.actorType = "Weed";
+					actorList.add(weed);
 				}
 			}
 		}
 	}
-
 	
 	public static void main(String[] args) 
 	{	
-		Simulator simulator = new Simulator(50,50);
+		Simulator simulator = new Simulator(50,50,30);
 	}	
 }
