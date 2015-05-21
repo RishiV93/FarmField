@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import ModelConstants;
 
 public class Simulator 
 {	
@@ -18,9 +17,9 @@ public class Simulator
     }
 
 
-    public void CreateSimulatorView(int depth, int width, int noOfSteps)
+    public void CreateSimulatorView(int depth, int width)
     {
-                    // creates a field with the provided depth and width e.g. 50*50
+        // creates a field with the provided depth and width e.g. 50*50
         field = new Field(depth,width);
 
         if (depth < 0 || depth > ModelConstants.MAX_WIDTH_DEPTH)
@@ -35,10 +34,6 @@ public class Simulator
             field.setWidth(width);
         }
 
-        if (noOfSteps < 0 || noOfSteps > ModelConstants.MAX_NO_STEPS)
-        {
-            steps = ModelConstants.DEFAULT_NO_STEPS;
-        }
 
         // outputs a graphical view of the field
         SimulatorView view = new SimulatorView(depth,width);	
@@ -55,7 +50,7 @@ public class Simulator
         // calls 'populate', providing the field and a random integer as a seed
         populate(field, new Random().nextInt());
 
-        simulate(this.step);
+        simulate(this.steps);
 
         // shows an "updated version" of the field, having now been populated
         view.showStatus(step, field);
@@ -153,6 +148,6 @@ public class Simulator
         Simulator simulator = new Simulator();
 
         // call the simulator's CreateSimulatorView method to render a JFrame of the specified size.
-        simulator.CreateSimulatorView(50, 50, 30);
+        simulator.CreateSimulatorView(50, 50);
     }
 }
