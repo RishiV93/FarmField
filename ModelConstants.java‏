@@ -1,14 +1,12 @@
 public class ModelConstants
 {
-	public static final int MAXIMUM_AGE = 50;			// the maximum age bean plants and weeds can live to (inclusive)
-	public static final double FARMER_CP = 0.01;		// the creation probability for farmers
-	public static final double BEANPLANT_CP = 0.01;		// the creation probability for bean plants
-	public static final double WEED_CP = 0.01;			// the creation probability for weeds
+	public static final int MAXIMUM_AGE = 150;			// the maximum age bean plants and weeds can live to (inclusive)
+	public static final double FARMER_CP = 0.05;		// the creation probability for farmers
+	public static final double BEANPLANT_CP = 0.05;		// the creation probability for bean plants
+	public static final double WEED_CP = 0.05;			// the creation probability for weeds
 	public static final double WEED_SP = 0.1;			// probability of 'weed spreading' occurring
 	public static final int WEED_SA = 35;				// weed spreading age - the age at which they can spread
 	public static final int DEFAULT_WIDTH = 50;			// default size for the width of the field
 	public static final int DEFAULT_DEPTH = 50;			// default size for the depth/height of the field
 	public static final int MAX_WIDTH_DEPTH = 180;		// acts as prevention against creating fields too large to display
-	public static final int MAX_NO_STEPS = 1000;		// maximum number of steps
-	public static final int DEFAULT_NO_STEPS = 500;		// default number of steps
 }
