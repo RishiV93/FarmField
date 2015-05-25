@@ -69,10 +69,18 @@ public class Simulator
             Actor actor = actorList.get(this.step);
 
             actor.act(field);
-
+            
             System.out.println(actor.actorType);
             System.out.println(actor.getLocation());
 
+            // if the actor (plants only) is no longer alive then remove the actor from the grid and from the collection of actors on the actorList.
+            if(!actor.GetAliveIndicator())
+            {
+                field.clearLocation(actor.getLocation());
+                
+                actorList.remove(actor);
+            }
+                    
             this.step++;
         }
     }
