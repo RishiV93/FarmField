@@ -4,7 +4,7 @@ public abstract class Actor extends ModelConstants
     private boolean alive = true;
     public String actorType;
     public static final int plantMaximumAge = 150;
-  
+      
     // (row, column)
     private Location location;
 
@@ -18,9 +18,17 @@ public abstract class Actor extends ModelConstants
 
     public abstract void act(Field theField);
 
-    public abstract void setLocation(Location location);
-  
-    public abstract Location getLocation();
+    // this method does not need to be an abstract as the contents of the method were the same in all instances.
+    public void setLocation(Location location)
+    {
+        this.location = location;
+    }
+
+    // this method does not need to be an abstract as the contents of the method were the same in all instances.
+    public Location getLocation()
+    {
+        return location;
+    }
   
     // returns bool true if the actor is a type of plant, else false.
     public boolean IsPlant()
@@ -40,6 +48,12 @@ public abstract class Actor extends ModelConstants
         {
             alive = false;  
         }
+    }
+    
+    // returns the Actor alive indicator value
+    public boolean GetAliveIndicator()
+    {
+        return alive;    
     }
     
     // increments the age of an actor (beanplant and weeds only) which will be called upon the use of the Act method in derived classes.
@@ -64,8 +78,6 @@ public abstract class Actor extends ModelConstants
             if (GetAge() >= ModelConstants.MAXIMUM_AGE) 
             {
                 SetActorAliveStatus();
-            
-                // remove from JFrame
             }    
         }        
     }
