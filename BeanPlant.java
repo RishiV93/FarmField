@@ -11,20 +11,6 @@ public class BeanPlant extends Actor
         DoPlantAction();
     }
 
-    @Override
-    public Location getLocation() 
-    {
-        // TODO Auto-generated method stub
-        return location;
-    }
-
-    @Override
-    public void setLocation(Location sL) 
-    {
-        // TODO Auto-generated method stub
-        this.location = sL;
-    }
-
     public BeanPlant()
     {
         actorType = "BeanPlant";
