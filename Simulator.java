@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Simulator 
 {	
-    private int steps = 500;
+    private int steps = 50;
     private int step = 1;
     private List<Actor> actorList = new ArrayList<Actor>();
     private Field field;
@@ -50,16 +50,19 @@ public class Simulator
         // calls 'populate', providing the field and a random integer as a seed
         populate(field, new Random().nextInt());
 
-        simulate(this.steps);
-
-        // shows an "updated version" of the field, having now been populated
-        view.showStatus(step, field);
+        while (this.step < this.steps)
+        {
+            simulate();
+        
+            // shows an "updated version" of the field, having now been populated
+            view.showStatus(step, field);
+        }
     }
 
-    public void simulate(int noOfSteps)
+    public void simulate()
     {
-        simulateOneStep(this.step);
-        this.step++;
+            simulateOneStep(this.step);
+            this.step++;   
     }
 
     public void simulateOneStep(int step)
