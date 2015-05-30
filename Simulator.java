@@ -16,7 +16,6 @@ public class Simulator
 
     }
 
-
     public void CreateSimulatorView(int depth, int width)
     {
         // creates a field with the provided depth and width e.g. 50*50
@@ -56,6 +55,10 @@ public class Simulator
         
             // shows an "updated version" of the field, having now been populated
             view.showStatus(step, field);
+            
+            // pause the execution for a 3 second delay. this will enable the user to noticably view the changes on the JFrame before the next
+            // round of actor movement.
+            Thread.sleep(3000);
         }
     }
 
