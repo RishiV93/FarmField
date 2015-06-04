@@ -6,7 +6,7 @@ public class BeanPlant extends Actor
     public void act(Field theField) 
     {
         // TODO Auto-generated method stub
-        System.out.println("BEAN PLANT ACT");
+        //System.out.println("BEAN PLANT ACT");
         
         DoPlantAction();
     }
