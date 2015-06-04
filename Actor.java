@@ -6,7 +6,7 @@ public abstract class Actor extends ModelConstants
     public static final int plantMaximumAge = 150;
       
     // (row, column)
-    private Location location;
+    protected Location location;
 
     // the various types of actors within the system.
     public  enum  ActorType
