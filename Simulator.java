@@ -5,163 +5,157 @@ import java.util.Random;
 
 public class Simulator 
 {	
-    private int steps = 50;
-    private int step = 1;
-    private List<Actor> actorList = new ArrayList<Actor>();
-    private Field field;
+	private int steps = 500;
+	private int step = 1;
+	private List<Actor> actorList = new ArrayList<Actor>();
+	private Field field;
 
-    // default constructor for the Simulator class.  
-    public Simulator()
-    {            
+	// default constructor for the Simulator class.  
+	public Simulator()
+	{            
 
-    }
-
-    public void CreateSimulatorView(int depth, int width)
-    {
-        // creates a field with the provided depth and width e.g. 50*50
-        field = new Field(depth,width);
-
-        if (depth < 0 || depth > ModelConstants.MAX_WIDTH_DEPTH)
-        {
-            depth = ModelConstants.DEFAULT_DEPTH;
-            field.setDepth(depth);
-        }
-
-        if (width < 0 || width > ModelConstants.MAX_WIDTH_DEPTH)
-        {
-            width = ModelConstants.DEFAULT_WIDTH;
-            field.setWidth(width);
-        }
+	}
 
 
-        // outputs a graphical view of the field
-        SimulatorView view = new SimulatorView(depth,width);	
+	public void CreateSimulatorView(int depth, int width)
+	{
+		// creates a field with the provided depth and width e.g. 50*50
+		field = new Field(depth,width);
 
-        // sets the colour to be used by each farmer instance
-        view.setColor(Farmer.class, Color.black);
+		if (depth < 0 || depth > ModelConstants.MAX_WIDTH_DEPTH)
+		{
+			depth = ModelConstants.DEFAULT_DEPTH;
+			field.setDepth(depth);
+		}
 
-        // sets the colour to be used by each weed instance
-        view.setColor(Weed.class, Color.blue);
+		if (width < 0 || width > ModelConstants.MAX_WIDTH_DEPTH)
+		{
+			width = ModelConstants.DEFAULT_WIDTH;
+			field.setWidth(width);
+		}
 
-        // sets the colour to be used by each bean plant instance
-        view.setColor(BeanPlant.class, Color.green);
 
-        // calls 'populate', providing the field and a random integer as a seed
-        populate(field, new Random().nextInt());
+		// outputs a graphical view of the field
+		SimulatorView view = new SimulatorView(depth,width);	
 
-        while (this.step < this.steps)
-        {
-            simulate();
-        
-            // shows an "updated version" of the field, having now been populated
-            view.showStatus(step, field);
-            
-            // pause the execution for a 3 second delay. this will enable the user to noticably view the changes on the JFrame before the next
-            // round of actor movement.
-            Thread.sleep(3000);
-        }
-    }
+		// sets the colour to be used by each farmer instance
+		view.setColor(Farmer.class, Color.black);
 
-    public void simulate()
-    {
-            simulateOneStep(this.step);
-            this.step++;   
-    }
+		// sets the colour to be used by each weed instance
+		view.setColor(Weed.class, Color.blue);
 
-    public void simulateOneStep(int step)
-    {	
-        for (int x = 1 ; x < actorList.size() ; x++ )
-        {
-            Actor actor = actorList.get(this.step);
+		// sets the colour to be used by each bean plant instance
+		view.setColor(BeanPlant.class, Color.green);
 
-            actor.act(field);
-            
-            System.out.println(actor.actorType);
-            System.out.println(actor.getLocation());
+		// calls 'populate', providing the field and a random integer as a seed
+		populate(field, new Random().nextInt());
 
-            // if the actor (plants only) is no longer alive then remove the actor from the grid and from the collection of actors on the actorList.
-            if(!actor.GetAliveIndicator())
-            {
-                field.clearLocation(actor.getLocation());
-                
-                actorList.remove(actor);
-            }
-                    
-            this.step++;
-        }
-    }
+		while(true){
+			simulate(this.steps);
 
-    // populates the field with initial actors
-    public void populate(Field field, int seed)			
-    {
-        // empties all field cells
-        field.clear();
+			// shows an "updated version" of the field, having now been populated
+			view.showStatus(step, field);
+		}
+	}
 
-        int depth = field.getDepth();
-        int width = field.getWidth();
+	public void simulate(int noOfSteps)
+	{
+		simulateOneStep(this.step);
+//		this.step++;
+	}
 
-        final int SIZE = 50;
+	public void simulateOneStep(int step)
+	{	
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (int x = 1 ; x < actorList.size() ; x++ )
+		{
+			Actor actor = actorList.get(step);
 
-        RandomGenerator.initialiseWithSeed(seed);
-        Random rand = RandomGenerator.getRandom();
+			actor.act(field);
 
-        for ( int x = 0 ; x < width ; x++ ) 				// Goes through each row
-        {			
-            for ( int y = 0 ; y < depth ; y++ ) 			// Goes through each column
-            {
-                double[] a = new double[SIZE];
+			////System.out.println(actor.actorType);
+			//System.out.println(actor.getLocation());
 
-                for (int i = 0; i < SIZE; i++)
-                {
-                        a[i] = rand.nextDouble();
-                }
+			step++;
+		}
+	}
 
-                double random = rand.nextDouble();
+	// populates the field with initial actors
+	public void populate(Field field, int seed)			
+	{
+		// empties all field cells
+		field.clear();
 
-                if (random < Farmer.FARMER_CP)
-                {
-                    Farmer farmer = new Farmer();
-                    field.place(farmer, x, y);
-                    farmer.actorType = "Farmer";
-                    Location location = new Location(x,y);
-                    farmer.setLocation(location);
-                    actorList.add(farmer);
-                }
+		int depth = field.getDepth();
+		int width = field.getWidth();
 
-                random = rand.nextDouble();
+		final int SIZE = 50;
 
-                if(random < BeanPlant.BEANPLANT_CP)
-                {
-                    BeanPlant beanPlant = new BeanPlant();
-                    field.place(beanPlant, x, y);
-                    beanPlant.actorType = "Bean Plant";
-                    Location location = new Location(x,y);
-                    beanPlant.setLocation(location);
-                    actorList.add(beanPlant);
-                }
+		RandomGenerator.initialiseWithSeed(seed);
+		Random rand = RandomGenerator.getRandom();
 
-                random = rand.nextDouble();
+		for ( int x = 0 ; x < width ; x++ ) 				// Goes through each row
+		{			
+			for ( int y = 0 ; y < depth ; y++ ) 			// Goes through each column
+			{
+				double[] a = new double[SIZE];
 
-                if(random < Weed.WEED_CP)
-                {
-                    Weed weed = new Weed();
-                    field.place(weed, x, y);
-                    weed.actorType = "Weed";
-                    Location location = new Location(x,y);
-                    weed.setLocation(location);
-                    actorList.add(weed);
-                }
-            }
-        }
-    }
+				for (int i = 0; i < SIZE; i++)
+				{
+					a[i] = rand.nextDouble();
+				}
 
-    // default application entry point is always the main method
-    public static void main(String[] args) 
-    {	
-        // instantiate an instance of the simulator class.
-        Simulator simulator = new Simulator();
+				double random = rand.nextDouble();
 
-        // call the simulator's CreateSimulatorView method to render a JFrame of the specified size.
-        simulator.CreateSimulatorView(50, 50);
-    }
+				if (random < Farmer.FARMER_CP)
+				{
+					Farmer farmer = new Farmer();
+					field.place(farmer, x, y);
+					farmer.actorType = "Farmer";
+					Location location = new Location(x,y);
+					farmer.setLocation(location);
+					actorList.add(farmer);
+				}
+
+				random = rand.nextDouble();
+
+				if(random < BeanPlant.BEANPLANT_CP)
+				{
+					BeanPlant beanPlant = new BeanPlant();
+					field.place(beanPlant, x, y);
+					beanPlant.actorType = "Bean Plant";
+					Location location = new Location(x,y);
+					beanPlant.setLocation(location);
+					actorList.add(beanPlant);
+				}
+
+				random = rand.nextDouble();
+
+				if(random < Weed.WEED_CP)
+				{
+					Weed weed = new Weed();
+					field.place(weed, x, y);
+					weed.actorType = "Weed";
+					Location location = new Location(x,y);
+					weed.setLocation(location);
+					actorList.add(weed);
+				}
+			}
+		}
+	}
+
+	// default application entry point is always the main method
+	public static void main(String[] args) 
+	{	
+		// instantiate an instance of the simulator class.
+		Simulator simulator = new Simulator();
+
+		// call the simulator's CreateSimulatorView method to render a JFrame of the specified size.
+		simulator.CreateSimulatorView(100, 100);
+	}
 }
