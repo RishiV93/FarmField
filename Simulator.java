@@ -3,21 +3,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+// the Simulator class - contains the main application entry point
 public class Simulator 
 {	
+	// private variables
 	private int steps = 500;
 	private int step = 1;
 	private List<Actor> actorList = new ArrayList<Actor>();
+	private List<Actor> deadActorList = new ArrayList<Actor>();
 	private Field field;
 
+	// default application entry point is always the main method
+	public static void main(String[] args) 
+	{	
+		// instantiate an instance of the simulator class.
+		Simulator simulator = new Simulator();
+
+		// call the simulator's RunSimulator method to render a JFrame of the specified size, populate and simulate
+		simulator.RunSimulator(50, 50);
+	}
+	
 	// default constructor for the Simulator class.  
 	public Simulator()
 	{            
 
 	}
 
+	//
+	public void AddActorToList(Actor actor)
+	{
+		this.actorList.add(actor);
+	}
+	
+	public void AddToDeadActorFromList(Actor actor)
+	{
+		this.deadActorList.add(actor);		
+	}
 
-	public void CreateSimulatorView(int depth, int width)
+	public void RunSimulator(int depth, int width)
 	{
 		// creates a field with the provided depth and width e.g. 50*50
 		field = new Field(depth,width);
@@ -50,15 +73,31 @@ public class Simulator
 		// calls 'populate', providing the field and a random integer as a seed
 		populate(field, new Random().nextInt());
 
-		while(true){
-			simulate(this.steps);
-
-			// shows an "updated version" of the field, having now been populated
+		while(true)
+		{
 			view.showStatus(step, field);
+			if(this.step > steps)	
+			{
+				break;
+			}
+			
+			simulate();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// shows an "updated version" of the field, having now been populated
+			
+			// the below line was used as a diagnostic
+			//System.out.println("Step number " + step);
 		}
+		
+		System.out.println("Application ended after " + steps + "steps.");
 	}
 
-	public void simulate(int noOfSteps)
+	public void simulate()
 	{
 		simulateOneStep(this.step);
 //		this.step++;
@@ -67,22 +106,27 @@ public class Simulator
 	public void simulateOneStep(int step)
 	{	
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(50);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		for (int x = 1 ; x < actorList.size() ; x++ )
 		{
-			Actor actor = actorList.get(step);
+			Actor actor = actorList.get(x);
 
-			actor.act(field);
+			actor.act(field, this);
+			
+			if(!actor.GetAliveIndicator())
+			{
+				DealWithDeadActor(actor);
+			}
 
-			////System.out.println(actor.actorType);
-			//System.out.println(actor.getLocation());
-
+			actorList.removeAll(deadActorList);
 			step++;
 		}
+		this.step++;
 	}
 
 	// populates the field with initial actors
@@ -148,14 +192,13 @@ public class Simulator
 			}
 		}
 	}
+	
+	public void DealWithDeadActor(Actor actor)
+	{
+		AddToDeadActorFromList(actor);
 
-	// default application entry point is always the main method
-	public static void main(String[] args) 
-	{	
-		// instantiate an instance of the simulator class.
-		Simulator simulator = new Simulator();
-
-		// call the simulator's CreateSimulatorView method to render a JFrame of the specified size.
-		simulator.CreateSimulatorView(100, 100);
+		actorList.removeAll(deadActorList);
 	}
+
+
 }
