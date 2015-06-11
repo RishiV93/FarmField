@@ -1,10 +1,9 @@
-import java.util.ArrayList;
 
 public class Weed extends Actor
 {
-    Location location = new Location(0,0);
-    Simulator simulator = new Simulator();
+    //Location location = new Location(0,0);
     
+	// defaults constructor - sets the actor type which is a property of the base class
     public Weed()
     {
         actorType = "Weed";
@@ -14,28 +13,18 @@ public class Weed extends Actor
     public void act(Field theField, Simulator simulator) 
     {
 
-    	GrowWeed(theField, simulator);
+    	GrowWeed(theField, location, simulator);
     	
         DoPlantAction();
     }
     
-    @Override
-    public void act(Field theField, ArrayList<Actor> actors) 
+    public void GrowWeed(Field theField, Location currentLocation, Simulator simulator)
     {
-    	//MoveWeed(theField);
-    	
-    	//DealWithWeeds(theField);
-    	
-    	//PlantBeanplant(theField);        
-    }
-    
-    public void GrowWeed(Field theField, Simulator simulator)
-    {
-    	Location newLocation=theField.freeAdjacentLocation(location);
+    	Location newLocation=theField.freeAdjacentLocation(currentLocation);
     	
         if(newLocation!=null && newLocation!=location){//If the new location is different to the current location.
         
-        	//Grow onto the new location
+        	//Place a weed on the new location
         	
         	Weed weed = new Weed();
         	
@@ -45,7 +34,7 @@ public class Weed extends Actor
         	weed.setLocation(newLocation);
         	
         	theField.place(weed, newLocation);
-        	simulator.AddActorToList(weed);
+        	simulator.AddToNewActorList(weed);
         	
         	System.out.println("Weed grew onto the new location " + newLocation);
         }
