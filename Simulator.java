@@ -7,12 +7,13 @@ import java.util.Random;
 public class Simulator 
 {	
 	// private variables
-	private int steps = 500;
+	private int steps = 25;
 	private int step = 1;
 	private List<Actor> actorList = new ArrayList<Actor>();
 	private List<Actor> deadActorList = new ArrayList<Actor>();
 	private Field field;
-
+	private List<Actor> tempNewActorList = new ArrayList<Actor>();
+	
 	// default application entry point is always the main method
 	public static void main(String[] args) 
 	{	
@@ -29,17 +30,19 @@ public class Simulator
 
 	}
 
-	//
+	// adds an actor to the actor list
 	public void AddActorToList(Actor actor)
 	{
 		this.actorList.add(actor);
 	}
 	
+	// adds an actor to the dead actor list
 	public void AddToDeadActorFromList(Actor actor)
 	{
 		this.deadActorList.add(actor);		
 	}
 
+	// main run simulator method which holds creation of JFrame and excution of the simulation
 	public void RunSimulator(int depth, int width)
 	{
 		// creates a field with the provided depth and width e.g. 50*50
@@ -57,7 +60,6 @@ public class Simulator
 			field.setWidth(width);
 		}
 
-
 		// outputs a graphical view of the field
 		SimulatorView view = new SimulatorView(depth,width);	
 
@@ -70,66 +72,76 @@ public class Simulator
 		// sets the colour to be used by each bean plant instance
 		view.setColor(BeanPlant.class, Color.green);
 
-		// calls 'populate', providing the field and a random integer as a seed
+		// calls the 'populate' method, passing the field and a random integer (as a seed) for the parameters
 		populate(field, new Random().nextInt());
 
+		// a loop which holds all simulation
+		// will only be broken once the maximum number of steps has been reached
 		while(true)
 		{
+			// updates the step number on the JFrame
 			view.showStatus(step, field);
-			if(this.step > steps)	
+			
+			// if the current step exceeds the maximum number of steps then it will break the While loop
+			// which ends the simulation
+			if(step >= steps)	
 			{
 				break;
 			}
+				
+			// used for diagnostics - outputs the current step number to the console
+			System.out.println("Now running step number " + step);
 			
+			// calls the simulate method
 			simulate();
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// shows an "updated version" of the field, having now been populated
-			
-			// the below line was used as a diagnostic
-			//System.out.println("Step number " + step);
 		}
 		
-		System.out.println("Application ended after " + steps + "steps.");
+		// used for diagnostics - output to the console when all steps have completed
+		System.out.println("Application ended after " + steps + " steps.");
 	}
 
+	// method which is used to simulate all movement on the field
 	public void simulate()
 	{
+		// calls the simulate one step method - passing in the current step number
 		simulateOneStep(this.step);
-//		this.step++;
 	}
 
+	// simulates a single step - accepts an integer of the current step number
 	public void simulateOneStep(int step)
 	{	
 		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		for (int x = 1 ; x < actorList.size() ; x++ )
-		{
-			Actor actor = actorList.get(x);
-
-			actor.act(field, this);
+			// have a slight delay so that the user can noticably view the changes
+			Thread.sleep(1000);
 			
-			if(!actor.GetAliveIndicator())
+			// cycles through each actor using a for loop
+			for (int x = 0 ; x < actorList.size() ; x++ )
 			{
-				DealWithDeadActor(actor);
+				// gets the next actor is the actorList array list collection111
+				Actor actor = actorList.get(x);
+
+				// calls each actors .act method - each type of actor has it's own implementation
+				actor.act(field, this);
 			}
 
+			// add all the newly created actors once every actor has actor in this step
+			actorList.addAll(tempNewActorList);
+			
+			// removes all dead actors from the actors list so that they are not included in the next step
 			actorList.removeAll(deadActorList);
-			step++;
-		}
+			
+		} 
+		catch (InterruptedException e) {
+			// print out thread.sleep exception stack trace
+			e.printStackTrace();
+		}		
+		
+		// increment the step count once this step has completed
 		this.step++;
 	}
 
-	// populates the field with initial actors
+	// populates the field with initial set of actors (farmers, weeds and bean plants) using a random generation process
+	// so that the number of each type and the populated fields are different everytime
 	public void populate(Field field, int seed)			
 	{
 		// empties all field cells
@@ -143,9 +155,11 @@ public class Simulator
 		RandomGenerator.initialiseWithSeed(seed);
 		Random rand = RandomGenerator.getRandom();
 
-		for ( int x = 0 ; x < width ; x++ ) 				// Goes through each row
+		// Goes through each row
+		for ( int x = 0 ; x < width ; x++ ) 				
 		{			
-			for ( int y = 0 ; y < depth ; y++ ) 			// Goes through each column
+			// Goes through each column
+			for ( int y = 0 ; y < depth ; y++ ) 			
 			{
 				double[] a = new double[SIZE];
 
@@ -193,12 +207,17 @@ public class Simulator
 		}
 	}
 	
-	public void DealWithDeadActor(Actor actor)
+	// adds an actor to the temp/new actor list - does not return anything as it has a void return type
+	public void AddToNewActorList(Actor actor)
 	{
-		AddToDeadActorFromList(actor);
-
-		actorList.removeAll(deadActorList);
+		// calls the locally created tempNewActorList's standard Add method and passes in the new actor as a parameter.
+		tempNewActorList.add(actor);
 	}
-
-
+	
+	// returns a List<Actor> object for all temp/new actors
+	public List<Actor> GetTempActorsList()
+	{
+		return tempNewActorList;
+	}
+	
 }
