@@ -1,12 +1,11 @@
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Farmer extends Actor 
 {
 	  //Location location = new Location(0,0);
  
-	
-    Farmer()
+	// defaults constructor - sets the actor type which is a property of the base class
+    public Farmer()
     {
         actorType = "Farmer";
     }
@@ -34,15 +33,19 @@ public class Farmer extends Actor
     public void pestControl(Field theField, Location currentLocation, Simulator simulator)
     {
     
-    Iterator<Location> adjacentLocations = theField.adjacentLocations(currentLocation);
+    	Iterator<Location> adjacentLocations = theField.adjacentLocations(currentLocation);
 
-    while (adjacentLocations.hasNext())
-    {
-    	Location nextLocation = adjacentLocations.next();
+    	while (adjacentLocations.hasNext())
+    	{
+    		Location nextLocation = adjacentLocations.next();
+    		
     		if (nextLocation != null && theField.getObjectAt(nextLocation) != null && theField.getObjectAt(nextLocation).actorType.toString() == "Weed")
     		{
+    			Actor actor = theField.getObjectAt(nextLocation);
+    			
     			Location newLocation = nextLocation;
-    			theField.clearLocation(newLocation);    			
+    			theField.clearLocation(newLocation);    
+    			simulator.AddToDeadActorFromList(actor);
     			System.out.println("Farmer cleared weed at " + newLocation);
     		}
     	}
@@ -64,7 +67,7 @@ public class Farmer extends Actor
         	beanPlant.setLocation(newLocation);
         	
         	theField.place(beanPlant, newLocation);
-        	simulator.AddActorToList(beanPlant);
+        	simulator.AddToNewActorList(beanPlant);
         	
         	System.out.println("Farmer planted a new BeanPlant on " + newLocation);
         }
