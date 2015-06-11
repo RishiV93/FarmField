@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public abstract class Actor extends ModelConstants
 {
     private int age;
@@ -24,8 +22,6 @@ public abstract class Actor extends ModelConstants
     }
     
     public abstract void act(Field theField, Simulator simulator);
-
-    public abstract void act(Field theField, ArrayList<Actor> actors);
     
     // this method does not need to be an abstract as the contents of the method were the same in all instances.
     public void setLocation(Location location)
