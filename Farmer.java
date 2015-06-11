@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Farmer extends Actor 
 {
@@ -15,13 +16,6 @@ public class Farmer extends Actor
     {
         Location newLocation=theField.freeAdjacentLocation(location);
         
-        //if(newLocation!=null && newLocation!=location && theField.getObjectAt(newLocation).actorType.toString() == "Weed")
-        //{
-       // 	theField.clearLocation(newLocation);//Remove the weed from its location.
-        	//System.out.println("Farmer cleared weed from at " + newLocation);
-        //}
-        //else 
-        
         if(newLocation!=null && newLocation!=location){//If the new location is different to the current location.
         theField.clearLocation(location);//Remove the farmer from the old location.
         theField.place(this, newLocation);//Place it on the new location
@@ -29,21 +23,29 @@ public class Farmer extends Actor
         System.out.println("Farmer moved from " + location + " to " + newLocation);
         location=newLocation;
         
-        
-        
+        // perform action of planting bean plants
         PlantOneBeanPlant(theField, location, simulator);
         
+        // perform action of clearing weeds.
+        pestControl(theField, location, simulator);
         }
     }
-    
-    @Override
-    public void act(Field theField, ArrayList<Actor> actors) 
+        
+    public void pestControl(Field theField, Location currentLocation, Simulator simulator)
     {
-    	//MoveFarmer(theField);
-    	
-    	//DealWithWeeds(theField);
-    	
-    	//PlantOneBeanPlant(theField, location, simulator);        
+    
+    Iterator<Location> adjacentLocations = theField.adjacentLocations(currentLocation);
+
+    while (adjacentLocations.hasNext())
+    {
+    	Location nextLocation = adjacentLocations.next();
+    		if (nextLocation != null && theField.getObjectAt(nextLocation) != null && theField.getObjectAt(nextLocation).actorType.toString() == "Weed")
+    		{
+    			Location newLocation = nextLocation;
+    			theField.clearLocation(newLocation);    			
+    			System.out.println("Farmer cleared weed at " + newLocation);
+    		}
+    	}
     }
     
     public void PlantOneBeanPlant(Field theField, Location currentLocation, Simulator simulator)
