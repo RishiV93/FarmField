@@ -1,28 +1,16 @@
-import java.util.ArrayList;
-
 public class BeanPlant extends Actor 
 {
+	// sets the default location of this actor - will be overwritten later on
     Location location = new Location(0,0);
-
+ 
     @Override
     public void act(Field theField, Simulator simulator) 
-    {
-        // TODO Auto-generated method stub
-        //System.out.println("BEAN PLANT ACT");
-        
+    { 
+    	// calls the base class method
         DoPlantAction();
     }
-    
-    @Override
-    public void act(Field theField, ArrayList<Actor> actors) 
-    {
-    	//MoveFarmer(theField);
-    	
-    	//DealWithWeeds(theField);
-    	
-    	//PlantBeanplant(theField);        
-    }
 
+	// defaults constructor - sets the actor type which is a property of the base class
     public BeanPlant()
     {
         actorType = "BeanPlant";
