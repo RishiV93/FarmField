@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public abstract class Actor extends ModelConstants
 {
     private int age;
@@ -16,8 +18,15 @@ public abstract class Actor extends ModelConstants
         Farmer
     }
 
-    public abstract void act(Field theField);
+    public void SetActorStatus(boolean value)
+    {
+    	this.alive = value;
+    }
+    
+    public abstract void act(Field theField, Simulator simulator);
 
+    public abstract void act(Field theField, ArrayList<Actor> actors);
+    
     // this method does not need to be an abstract as the contents of the method were the same in all instances.
     public void setLocation(Location location)
     {
@@ -68,6 +77,11 @@ public abstract class Actor extends ModelConstants
         return this.age;
     }
     
+    public void SetAgeToOne()
+    {
+    	this.age = 1;
+    }
+    
     // to be called within the derived Beanplant and weed classes to do their action which occurs per step.
     public void DoPlantAction()
     {
@@ -80,5 +94,22 @@ public abstract class Actor extends ModelConstants
                 SetActorAliveStatus();
             }    
         }        
+    }
+    
+    public String GetActorType()
+    {
+    	return this.actorType;
+    }    
+    
+    public boolean CheckLocationNotOccupied(Field field, Location newLocation)
+    {
+    	boolean returnValue = true;
+    	
+    	if (field.getObjectAt(newLocation) != null)
+    	{
+    		returnValue = false;
+    	}
+    	
+    	return returnValue;
     }
 }
