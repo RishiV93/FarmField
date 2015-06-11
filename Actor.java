@@ -16,6 +16,7 @@ public abstract class Actor extends ModelConstants
         Farmer
     }
 
+    // updates the actor's alive status to the new value entered as a parameter
     public void SetActorStatus(boolean value)
     {
     	this.alive = value;
@@ -73,6 +74,7 @@ public abstract class Actor extends ModelConstants
         return this.age;
     }
     
+    // sets the actors age to one
     public void SetAgeToOne()
     {
     	this.age = 1;
@@ -81,22 +83,28 @@ public abstract class Actor extends ModelConstants
     // to be called within the derived Beanplant and weed classes to do their action which occurs per step.
     public void DoPlantAction()
     {
+    	// if is a type of plant
         if (IsPlant()) 
         {
+        	// increment age
             IncreaseAge();
         
+            // if the new age exceeds the maximum age
             if (GetAge() >= ModelConstants.MAXIMUM_AGE) 
             {
+            	// change the alive status to false
                 SetActorAliveStatus();
             }    
         }        
     }
     
+    // returns a string of the actor type
     public String GetActorType()
     {
     	return this.actorType;
     }    
     
+    // checks if the location is not occupied
     public boolean CheckLocationNotOccupied(Field field, Location newLocation)
     {
     	boolean returnValue = true;
